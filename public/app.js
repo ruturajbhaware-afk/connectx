@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io('https://wagon-saint-positive-activated.trycloudflare.com');
 
 let n1 = Math.floor(Math.random() * 8) + 1;
 let n2 = Math.floor(Math.random() * 8) + 1;
