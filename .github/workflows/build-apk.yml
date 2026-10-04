@@ -25,6 +25,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Sync Capacitor
+        run: npx cap sync android
+
       - name: Build Android APK
         run: |
           npm install
