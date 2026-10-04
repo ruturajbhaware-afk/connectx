@@ -1,0 +1,6 @@
+{
+  "appId": "com.ruturaj.connectx",
+  "appName": "ConnectX",
+  "webDir": "public",
+  "bundledWebRuntime": false
+}

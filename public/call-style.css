@@ -1,0 +1,101 @@
+/* Camera Mirror Fix: Natural selfie view */
+#local-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+}
+
+/* Call Overlay Modern Style */
+.call-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(8, 10, 16, 0.96);
+  backdrop-filter: blur(14px);
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.call-body {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.call-status-badge {
+  font-size: 0.78rem;
+  color: #00e676;
+  background: rgba(0, 230, 118, 0.12);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 230, 118, 0.3);
+}
+
+/* Glassmorphic Animated Control Dock */
+.call-controls-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.call-svg-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #181b28;
+  border: 1px solid #292e44;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.call-svg-btn:active {
+  transform: scale(0.92);
+}
+
+.call-svg-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: #cbd5e1;
+}
+
+.call-svg-btn.active-off {
+  background: #ff1744;
+  border-color: #ff1744;
+}
+
+.call-svg-btn.active-off svg {
+  fill: #ffffff;
+}
+
+.call-end-danger {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff1744, #d50000);
+  border: none;
+  box-shadow: 0 4px 18px rgba(255, 23, 68, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.call-end-danger svg {
+  width: 24px;
+  height: 24px;
+  fill: #ffffff;
+}

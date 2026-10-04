@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ConnectX</title>
+  <link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/call-style.css"></head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Brand Header (Var kontahi profile icon nahi) -->
+    <div class="brand-header" id="main-brand-header">
+      <div class="header-top" style="justify-content:center;">
+        <div class="brand-title">ConnectX</div>
+      </div>
+      <div class="brand-tagline">Make Real Friends & Connect Worldwide</div>
+      <a class="dev-credit" href="https://instagram.com/Ruturaj__bhaware__358" target="_blank">
+        <svg class="ig-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        <span>Dev: Ruturaj__bhaware__358</span>
+      </a>
+    </div>
+
+    <!-- 1. Auth Screen -->
+    <div class="screen" id="auth-screen">
+      <div class="tab-switch">
+        <button class="tab-btn active" id="tab-signup">Sign Up</button>
+        <button class="tab-btn" id="tab-login">Login</button>
+      </div>
+
+      <div id="signup-fields" style="width:100%; display:flex; flex-direction:column;">
+        <input type="text" id="su-name" class="input-field" placeholder="Full Name" autocomplete="off" />
+        <input type="text" id="su-username" class="input-field" placeholder="Choose Unique Username (@)" autocomplete="off" />
+        <input type="email" id="su-email" class="input-field" placeholder="Email Address" autocomplete="off" />
+        <div class="password-wrap">
+          <input type="password" id="su-password" class="input-field" placeholder="Create Password" />
+          <button type="button" class="eye-btn" onclick="togglePass('su-password', this)">👁️</button>
+        </div>
+        <select id="su-gender" class="input-field">
+          <option value="" disabled selected>Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <select id="su-language" class="input-field">
+          <option value="en" selected>English (Default)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="hi">हिंदी (Hindi)</option>
+          <option value="es">Español (Spanish)</option>
+          <option value="de">Deutsch (German)</option>
+          <option value="fr">Français (French)</option>
+          <option value="ru">Русский (Russian)</option>
+          <option value="ja">日本語 (Japanese)</option>
+          <option value="ar">العربية (Arabic)</option>
+          <option value="pt">Português (Portuguese)</option>
+        </select>
+        <div class="captcha-box">
+          <span class="captcha-badge" id="captcha-code">4 + 5</span>
+          <input type="number" id="captcha-input" class="input-field" placeholder="= ?" style="margin:0; width:70px; padding:6px;" />
+          <span style="font-size:0.75rem; color:#8f96ab;">Human check</span>
+        </div>
+        <button class="btn" id="signup-btn">Get Verification Code</button>
+      </div>
+
+      <div id="login-fields" class="hidden" style="width:100%; display:flex; flex-direction:column;">
+        <input type="email" id="li-email" class="input-field" placeholder="Enter your email" autocomplete="off" />
+        <div class="password-wrap">
+          <input type="password" id="li-password" class="input-field" placeholder="Enter password" />
+          <button type="button" class="eye-btn" onclick="togglePass('li-password', this)">👁️</button>
+        </div>
+        <button class="btn" id="login-btn">Login with Gmail Code</button>
+      </div>
+    </div>
+
+    <!-- 2. OTP Screen -->
+    <div class="screen hidden" id="otp-screen" style="justify-content:center; align-items:center;">
+      <h3 style="color:#ff3366; margin-bottom:8px;">Email Verification</h3>
+      <p style="font-size:0.82rem; color:#aaa; text-align:center; margin-bottom:15px;" id="otp-hint">Code sent to Gmail inbox.</p>
+      <input type="text" id="otp-input" class="input-field" placeholder="6-digit code" maxlength="6" style="text-align:center; font-size:1.3rem; letter-spacing:5px;" />
+      <button class="btn" id="verify-btn">Verify & Enter App</button>
+      <button class="btn" id="back-btn" style="background:#161822; margin-top:8px;">Back</button>
+    </div>
+
+    <!-- 3. Discovery Screen -->
+    <div class="screen hidden" id="home-screen" style="padding: 10px;">
+      <div class="discovery-box">
+        <div class="main-profile-card">
+          
+          <div class="top-action-bar">
+            <button class="quick-btn" id="action-chat">💬 Chat <span class="lock-tag">🔒</span></button>
+            <button class="quick-btn" id="action-voice">📞 Call <span class="lock-tag">🔒</span></button>
+            <button class="quick-btn live-video-btn" id="action-video">📹 Video <span class="lock-tag">🔒</span></button>
+          </div>
+
+          <div class="avatar-display">
+            <span id="avatar-icon">👤</span>
+            <img id="avatar-img" class="hidden" />
+          </div>
+
+          <div class="profile-meta">
+            <div class="display-title">
+              <span id="card-user-name">User Name</span>
+              <span class="uname-badge" id="card-user-uname">@user</span>
+            </div>
+            <div class="meta-subtitle" id="card-user-details">Near you • Online</div>
+            <div class="meta-bio" id="card-user-bio">Connecting on ConnectX...</div>
+            
+            <div class="action-dock">
+              <button class="action-card-btn btn-next" id="btn-next">Next ➔</button>
+              <button class="action-card-btn btn-connect" id="btn-connect">Connect ⚡</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Messages / Inbox Screen -->
+    <div class="screen hidden" id="inbox-screen" style="padding: 12px 14px;">
+      <div class="inbox-header">
+        <h3>Direct Messages</h3>
+        <span class="online-pill" id="inbox-friends-count">0 Friends</span>
+      </div>
+      <div class="inbox-list" id="inbox-list-container"></div>
+    </div>
+
+    <!-- 5. Profile Screen -->
+    <div class="screen hidden" id="profile-edit-screen">
+      <div class="profile-setting-card">
+        <input type="file" id="my-dp-input" accept="image/*" class="hidden" />
+        
+        <div class="my-dp-box" id="my-dp-box">
+          <div class="dp-circle">
+            <span id="my-dp-icon">📷</span>
+            <img id="my-dp-img" class="hidden" />
+          </div>
+          <span style="font-size:0.75rem; color:#ff3366; font-weight:600; margin-top:4px;">Change Photo</span>
+        </div>
+
+        <h3 id="my-profile-name" style="margin-top:2px;">Your Name</h3>
+        <span id="my-profile-uname" style="font-size:0.75rem; color:#00a2ff;">@yourusername</span>
+
+        <div style="width:100%; margin-top:8px; display:flex; flex-direction:column; gap:5px;">
+          <label class="field-label">Your Bio</label>
+          <input type="text" id="edit-bio" class="input-field" placeholder="Tell something about yourself" />
+
+          <div class="location-box">
+            <span style="font-size:0.72rem; color:#cbd5e1;" id="location-text">📍 Location: Not detected</span>
+            <button type="button" class="loc-btn" id="detect-loc-btn">Auto-Detect GPS</button>
+          </div>
+
+          <!-- All Languages List (Dropdown bharleli ahe) -->
+          <label class="field-label">App Language (All Languages)</label>
+          <select id="edit-language" class="input-field">
+            <option value="en">English (Default)</option>
+            <option value="mr">मराठी (Marathi)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="es">Español (Spanish)</option>
+            <option value="de">Deutsch (German)</option>
+            <option value="fr">Français (French)</option>
+            <option value="ru">Русский (Russian)</option>
+            <option value="ja">日本語 (Japanese)</option>
+            <option value="ar">العربية (Arabic)</option>
+            <option value="pt">Português (Portuguese)</option>
+            <option value="it">Italiano (Italian)</option>
+            <option value="ko">한국어 (Korean)</option>
+            <option value="zh">中文 (Chinese)</option>
+            <option value="tr">Türkçe (Turkish)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+          </select>
+
+          <button type="button" class="account-collapse-btn" id="toggle-acc-btn">⚙️ Profile & Account Info ▼</button>
+          
+          <div class="login-info-box hidden" id="acc-details-box">
+            <label class="field-label">Change Full Name</label>
+            <input type="text" id="edit-fullname" class="input-field" placeholder="Full Name" />
+
+            <label class="field-label">Change Username (@)</label>
+            <input type="text" id="edit-uname-input" class="input-field" placeholder="Unique username" />
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+              <span style="font-size:0.72rem; color:#888;">Account Email:</span>
+              <span id="my-account-email" style="font-size:0.75rem; color:#cbd5e1;">user@email.com</span>
+            </div>
+            <button type="button" class="text-link-btn" id="forgot-pass-btn">Forgot Password? Reset via OTP</button>
+          </div>
+        </div>
+
+        <button class="btn" id="save-my-profile-btn" style="margin-top:8px;">Save Profile</button>
+        <button class="logout-danger-btn" id="logout-btn">Log Out</button>
+      </div>
+    </div>
+
+    <!-- 6. Instagram DM Chat Window -->
+    <div class="chat-screen hidden" id="chat-screen">
+      <div class="chat-header">
+        <button class="chat-back-btn" id="chat-close-btn">➔</button>
+        <div class="chat-user-avatar">
+          <img id="chat-header-img" src="" class="hidden" />
+          <span id="chat-header-icon">👤</span>
+        </div>
+        <div class="chat-user-info">
+          <div class="chat-user-name" id="chat-header-name">Friend Name</div>
+          <div class="chat-user-status">● Active Friend</div>
+        </div>
+        <div class="chat-header-actions">
+          <button class="chat-action-icon" id="chat-top-call" title="Voice Call">📞</button>
+          <button class="chat-action-icon" id="chat-top-video" title="Video Call">📹</button>
+        </div>
+      </div>
+
+      <div class="chat-messages-area" id="chat-messages-area">
+        <div class="chat-timestamp">Connected on ConnectX</div>
+      </div>
+
+      <div class="chat-input-dock">
+        <input type="text" id="chat-msg-input" class="chat-input-field" placeholder="Message..." autocomplete="off" />
+        <button class="chat-send-btn" id="chat-send-btn">➤</button>
+      </div>
+    </div>
+
+    <!-- 7. Calling & Live Video Screen -->
+    <div class="call-overlay hidden" id="call-overlay">
+      <div class="call-body">
+        <div class="call-avatar-wrap">
+          <img id="call-user-img" src="" class="hidden" />
+          <span id="call-user-icon">👤</span>
+        </div>
+        <h3 id="call-user-name">Friend Name</h3>
+        <p class="call-status-label" id="call-status-label">Calling...</p>
+        
+        <div class="video-preview-box hidden" id="video-preview-box">
+          <video id="local-video" autoplay playsinline muted></video>
+        </div>
+
+        <div class="call-action-dock">
+          <button class="call-btn-circle mute-btn" id="call-mute-btn">🎙️</button>
+          <button class="call-btn-circle end-call-btn" id="end-call-btn">🔴</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar (He 3 buttons ahet: Discover, Chats, Profile) -->
+    <div class="bottom-nav hidden" id="bottom-nav">
+      <button class="nav-item active" id="nav-discover"><span class="nav-icon">🌐</span><span>Discover</span></button>
+      <button class="nav-item" id="nav-chats"><span class="nav-icon">💬</span><span>Chats</span></button>
+      <button class="nav-item" id="nav-profile"><span class="nav-icon">👤</span><span>Profile</span></button>
+    </div>
+
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/lang.js"></script><script src="/chat.js"></script><script src="/app.js"></script>
+<script src="/call-engine.js"></script><script src="/chat-calls.js"></script><script src="/chat-complete.js"></script><script src="/safety-system.js"></script><script src="/profile-filters.js"></script><script src="/dev-mode.js"></script></body>
+</html>
