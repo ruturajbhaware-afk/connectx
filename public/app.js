@@ -1,19 +1,20 @@
 const socket = io('https://connectx-ej5p.onrender.com', {
-  transports: ['websocket', 'polling'],
-  reconnectionAttempts: 10,
-  timeout: 20000
+  transports: ['polling', 'websocket'],
+  reconnection: true,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000
 });
 socket.on('connect', () => {
-  alert('Connected to Render Server successfully!');
+  console.log('Connected to Render');
 });
 socket.on('connect_error', (err) => {
-  alert('Socket Connection Error: ' + err.message);
+  console.warn('Socket error:', err);
 });
 socket.on('auth_error', (data) => {
-  alert('Auth Error: ' + data.message);
+  if(typeof showNotification==='function'){showNotification(data.message);}else{console.log(data.message);}
 });
 socket.on('otp_sent', () => {
-  alert('OTP sent successfully to your email!');
+  if(typeof showNotification==='function'){showNotification('OTP Sent!');}
 });
 
 
