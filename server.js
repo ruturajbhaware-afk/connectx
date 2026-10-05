@@ -1,9 +1,11 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
+const { Server } = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
 
 app.use(cors({ origin: '*' }));
 app.use(express.json());
@@ -11,7 +13,7 @@ app.use(express.json());
 const otpStore = {};
 let pendingMails = [];
 
-// 1. App sends signup request here
+// HTTP Signup OTP
 app.post('/api/signup-otp', (req, res) => {
   const { fullName, username, email, password, gender, language } = req.body;
   if (!email) return res.status(400).json({ success: false, message: 'Email required' });
@@ -23,33 +25,62 @@ app.post('/api/signup-otp', (req, res) => {
     userData: { fullName, username, email, password, gender, language }
   };
 
-  // Queue mail for Termux worker
   pendingMails.push({ email, otp });
-  console.log('[Queued OTP for Termux Worker]:', email, otp);
-  res.json({ success: true, message: 'OTP queued successfully' });
+  res.json({ success: true, message: 'OTP queued' });
 });
 
-// 2. Termux Worker fetches pending mails
+// Termux Pull
 app.get('/api/worker/pull', (req, res) => {
   const batch = [...pendingMails];
   pendingMails = [];
   res.json(batch);
 });
 
-// 3. Verify OTP
+// HTTP Verify
 app.post('/api/verify-otp', (req, res) => {
   const { email, code } = req.body;
   const record = otpStore[email ? email.toLowerCase() : ''];
 
   if (!record) return res.status(400).json({ success: false, message: 'No OTP requested' });
   if (Date.now() > record.expires) return res.status(400).json({ success: false, message: 'OTP Expired' });
-  if (record.code !== code) return res.status(400).json({ success: false, message: 'Invalid verification code' });
+  if (record.code !== code) return res.status(400).json({ success: false, message: 'Invalid code' });
 
+  const user = record.userData;
   delete otpStore[email.toLowerCase()];
-  res.json({ success: true, user: record.userData });
+  res.json({ success: true, user });
+});
+
+// Socket.io Handlers (App listening here)
+io.on('connection', (socket) => {
+  // App sends verify-otp or completeSignup via socket
+  socket.on('verifyOtp', (data) => {
+    const { email, code } = data || {};
+    const record = otpStore[email ? email.toLowerCase() : ''];
+    if (record && record.code === code) {
+      const user = record.userData;
+      delete otpStore[email.toLowerCase()];
+      socket.emit('authSuccess', { user });
+      socket.emit('otpVerified', { success: true, user });
+    } else {
+      socket.emit('authError', { message: 'Invalid or Expired OTP' });
+    }
+  });
+
+  socket.on('verify-otp', (data) => {
+    const { email, code } = data || {};
+    const record = otpStore[email ? email.toLowerCase() : ''];
+    if (record && record.code === code) {
+      const user = record.userData;
+      delete otpStore[email.toLowerCase()];
+      socket.emit('authSuccess', { user });
+      socket.emit('otpVerified', { success: true, user });
+    } else {
+      socket.emit('authError', { message: 'Invalid or Expired OTP' });
+    }
+  });
 });
 
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log('Relay Server running on port ' + PORT));
+server.listen(PORT, () => console.log('Server running on ' + PORT));
