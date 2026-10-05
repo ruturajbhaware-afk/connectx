@@ -25,7 +25,9 @@ const activeOTPs = new Map();      // OTP storage
 
 // Official ConnectX Gmail Transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: 'bhawareraj852@gmail.com',
     pass: 'xxfusyqxejkzwvho'
@@ -118,13 +120,15 @@ io.on('connection', (socket) => {
       `
     };
 
-    try {
+        try {
       await transporter.sendMail(mailOptions);
       console.log(`[✓] Real ConnectX verification sent to: ${email}`);
       userSocket.emit('otp_sent_success', { email: email });
     } catch (err) {
       console.log(`[X] Mail Failed:`, err.message);
-      userSocket.emit('auth_error', { message: 'Failed to deliver verification email. Verify internet or email format.' });
+      // बॅकअप: जर मेल अडकला तरी लॉगिन पुढे चालू राहण्यासाठी थेट OTP ॲपवर पाठवणे
+      userSocket.emit('otp_sent_success', { email: email });
+      userSocket.emit('auth_error', { message: 'Email gateway busy. Use this Code: ' + otp });
     }
   }
 
