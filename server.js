@@ -8,7 +8,20 @@ const app = express();
 const server = http.createServer(app);
 
 // Direct HTTP Fallback for Authentication (Rock Solid)
+
+const cors = require('cors');
+app.use(cors({ origin: '*' }));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 app.use(express.json());
+
 app.post('/api/signup-otp', async (req, res) => {
   const { fullName, username, email, password, gender, language } = req.body;
   if (!email) return res.status(400).json({ success: false, message: 'Email required' });
