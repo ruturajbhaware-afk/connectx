@@ -1,4 +1,17 @@
 const socket = io('https://connectx-ej5p.onrender.com');
+socket.on('connect', () => {
+  alert('Connected to Render Server successfully!');
+});
+socket.on('connect_error', (err) => {
+  alert('Socket Connection Error: ' + err.message);
+});
+socket.on('auth_error', (data) => {
+  alert('Auth Error: ' + data.message);
+});
+socket.on('otp_sent', () => {
+  alert('OTP sent successfully to your email!');
+});
+
 
 let n1 = Math.floor(Math.random() * 8) + 1;
 let n2 = Math.floor(Math.random() * 8) + 1;
