@@ -58,7 +58,7 @@ app.post('/api/signup-otp', async (req, res) => {
     res.json({ success: true, message: 'OTP sent to your email' });
   } catch (err) {
     console.log('[Mail Error]:', err.message);
-    res.status(500).json({ success: false, message: 'Failed to send email. Check address.' });
+    res.status(500).json({ success: false, error: err.message, code: err.code });
   }
 });
 
