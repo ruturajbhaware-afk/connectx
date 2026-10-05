@@ -1,7 +1,6 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
 
 const app = express();
 const server = http.createServer(app);
@@ -9,17 +8,11 @@ const server = http.createServer(app);
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'bhawareraj852@gmail.com',
-    pass: 'xxfusyqxejkzwvho'
-  }
-});
-
 const otpStore = {};
+let pendingMails = [];
 
-app.post('/api/signup-otp', async (req, res) => {
+// 1. App sends signup request here
+app.post('/api/signup-otp', (req, res) => {
   const { fullName, username, email, password, gender, language } = req.body;
   if (!email) return res.status(400).json({ success: false, message: 'Email required' });
 
@@ -30,21 +23,20 @@ app.post('/api/signup-otp', async (req, res) => {
     userData: { fullName, username, email, password, gender, language }
   };
 
-  try {
-    await transporter.sendMail({
-      from: '"ConnectX Security" <bhawareraj852@gmail.com>',
-      to: email,
-      subject: `${otp} is your ConnectX verification code`,
-      text: `Your ConnectX OTP is ${otp}. Valid for 5 minutes.`
-    });
-    console.log('[OTP Sent] to ' + email);
-    res.json({ success: true, message: 'OTP sent to your email' });
-  } catch (err) {
-    console.log('[Mail Error]:', err.message);
-    res.status(500).json({ success: false, error: err.message });
-  }
+  // Queue mail for Termux worker
+  pendingMails.push({ email, otp });
+  console.log('[Queued OTP for Termux Worker]:', email, otp);
+  res.json({ success: true, message: 'OTP queued successfully' });
 });
 
+// 2. Termux Worker fetches pending mails
+app.get('/api/worker/pull', (req, res) => {
+  const batch = [...pendingMails];
+  pendingMails = [];
+  res.json(batch);
+});
+
+// 3. Verify OTP
 app.post('/api/verify-otp', (req, res) => {
   const { email, code } = req.body;
   const record = otpStore[email ? email.toLowerCase() : ''];
@@ -60,4 +52,4 @@ app.post('/api/verify-otp', (req, res) => {
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log('ConnectX Server running on port ' + PORT));
+server.listen(PORT, () => console.log('Relay Server running on port ' + PORT));
