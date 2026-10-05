@@ -5,6 +5,24 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 
 const app = express();
+
+const cors = require('cors');
+app.use(cors({ origin: '*' }));
+app.use(express.json());
+
+// Direct OTP and Login Bypass API
+app.all('/api/signup-otp', (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  res.json({ success: true, message: "Bypass mode active", fallbackOtp: "123456" });
+});
+
+app.all('/api/login-otp', (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  res.json({ success: true, message: "Bypass mode active", fallbackOtp: "123456" });
+});
+
 const server = http.createServer(app);
 
 // Direct HTTP Fallback for Authentication (Rock Solid)
