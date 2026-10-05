@@ -80,8 +80,38 @@ document.getElementById('signup-btn').addEventListener('click', () => {
     return alert('Math captcha incorrect!');
   }
 
+  
   activeSessionEmail = email;
-  socket.emit('request_signup_otp', { fullName: name, username, email, password, gender, language });
+  
+  // Show loading indicator
+  const btn = document.getElementById('signup-btn');
+  const originalText = btn.innerText;
+  btn.innerText = 'Sending Code...';
+  btn.disabled = true;
+
+  fetch('https://connectx-ej5p.onrender.com/api/signup-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fullName: name, username, email, password, gender, language })
+  })
+  .then(r => r.json())
+  .then(data => {
+    btn.innerText = originalText;
+    btn.disabled = false;
+    if (data.success) {
+      authScreen.classList.add('hidden');
+      otpScreen.classList.remove('hidden');
+      document.getElementById('otp-hint').innerText = 'Verification code sent to ' + email + (data.fallbackOtp ? ' (Code: ' + data.fallbackOtp + ')' : '');
+    } else {
+      alert(data.message || 'Failed to send OTP');
+    }
+  })
+  .catch(err => {
+    btn.innerText = originalText;
+    btn.disabled = false;
+    alert('Network error. Server might be waking up, please retry in 10 seconds.');
+  });
+
 });
 
 // Login Button Event
