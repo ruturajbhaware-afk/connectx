@@ -1,4 +1,8 @@
-const socket = io('https://connectx-ej5p.onrender.com');
+const socket = io('https://connectx-ej5p.onrender.com', {
+  transports: ['websocket', 'polling'],
+  reconnectionAttempts: 10,
+  timeout: 20000
+});
 socket.on('connect', () => {
   alert('Connected to Render Server successfully!');
 });
